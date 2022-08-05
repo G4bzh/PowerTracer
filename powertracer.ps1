@@ -35,7 +35,7 @@ function is_equal {
 
 class Tuple {
     # Properties
-    [Float[]]$coord
+    hidden [Float[]]$coord
 
     # Constructors
     Tuple(
@@ -69,6 +69,15 @@ class Tuple {
         return $this.coord[4]
     }
 
+    [Float] Magnitude(){
+        return [Math]::sqrt(
+            $this.coord[0]*$this.coord[0] +
+            $this.coord[1]*$this.coord[1] +
+            $this.coord[2]*$this.coord[2] +
+            $this.coord[3]*$this.coord[3]
+        )
+    }
+
     [Bool]is_Point(){
         return is_equal $this.coord[3] 1
     }
@@ -91,7 +100,48 @@ class Tuple {
                                 $t1.coord[2]+$t2.coord[2],
                                 $t1.coord[3]+$t2.coord[3])
     }
-     
+    
+    static [Tuple]Subtract(
+        [Tuple] $t1,
+        [Tuple] $t2
+    ){
+        return [Tuple]::New($t1.coord[0]-$t2.coord[0],
+                            $t1.coord[1]-$t2.coord[1],
+                            $t1.coord[2]-$t2.coord[2],
+                            $t1.coord[3]-$t2.coord[3])
+    }
+
+    static [Tuple]Negate(
+        [Tuple] $t1
+    ){
+        return [Tuple]::New(-$t1.coord[0],
+                            -$t1.coord[1],
+                            -$t1.coord[2],
+                            -$t1.coord[3])
+    }
+
+    static [Tuple]ScalarMult(
+        [Tuple] $t1,
+        [Float] $a
+    ){
+        return [Tuple]::New($a*$t1.coord[0],
+                            $a*$t1.coord[1],
+                            $a*$t1.coord[2],
+                            $a*$t1.coord[3])
+    }
+
+    static [Tuple]ScalarDiv(
+        [Tuple] $t1,
+        [Float] $a
+    ){
+        # Assuming $a != 0
+        return [Tuple]::New($t1.coord[0]/$a,
+                            $t1.coord[1]/$a,
+                            $t1.coord[2]/$a,
+                            $t1.coord[3]/$a)
+    }
+
+
 }
 
 #########
@@ -155,3 +205,17 @@ $a2=[Tuple]::New(-2,3,1,0)
 $a1
 $a2
 [Tuple]::Add($a1,$a2)
+
+$p1 = [Point]::New(3,2,1)
+$p2 = [Point]::New(5,6,7)
+$p1
+$p2
+[Tuple]::Subtract($p1,$p2)
+
+[Tuple]::Negate($a1)
+[Tuple]::ScalarMult($a1,2.5)
+[Tuple]::ScalarDiv($a1,2)
+
+$v1 = [Vector]::New(1,2,3)
+$v1.Magnitude()
+is_equal $v1.Magnitude() ([Math]::sqrt(14))
