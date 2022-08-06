@@ -141,6 +141,26 @@ class Tuple {
                             $t1.coord[3]/$a)
     }
 
+    static [Tuple]Normalize(
+        [Tuple] $t1
+    ){
+        $m = $t1.Magnitude()
+        # Assuming $m != 0
+        return [Tuple]::New($t1.coord[0]/$m,
+                            $t1.coord[1]/$m,
+                            $t1.coord[2]/$m,
+                            $t1.coord[3]/$m)
+    }
+
+    static [Float]Dot(
+            [Tuple] $t1,
+            [Tuple] $t2
+        ){
+            return ($t1.coord[0]*$t2.coord[0] +
+                    $t1.coord[1]*$t2.coord[1] +
+                    $t1.coord[2]*$t2.coord[2] +
+                    $t1.coord[3]*$t2.coord[3])
+    }
 
 }
 
@@ -159,9 +179,9 @@ class Point : Tuple {
 
  }
 
-#########
-# Point #
-#########
+##########
+# Vector #
+##########
 
 class Vector : Tuple {
     
@@ -171,6 +191,18 @@ class Vector : Tuple {
         [Float]$y,
         [Float]$z
     ) : base($x,$y,$z,0) {}
+
+    # Static Methods
+
+    static [Vector]Cross(
+        [Vector] $v1,
+        [Vector] $v2
+    ){
+        return [Vector]::New($v1.coord[1]*$v2.coord[2] - $v1.coord[2]*$v2.coord[1],
+                            $v1.coord[2]*$v2.coord[0] - $v1.coord[0]*$v2.coord[2],
+                            $v1.coord[0]*$v2.coord[1] - $v1.coord[1]*$v2.coord[0])
+}
+
 
 }
 
@@ -219,3 +251,10 @@ $p2
 $v1 = [Vector]::New(1,2,3)
 $v1.Magnitude()
 is_equal $v1.Magnitude() ([Math]::sqrt(14))
+
+[Tuple]::Normalize($v1)
+
+$v2 = [Vector]::New(2,3,4)
+[Tuple]::Dot($v1,$v2)
+[Vector]::Cross($v1,$v2)
+[Vector]::Cross($v2,$v1)
