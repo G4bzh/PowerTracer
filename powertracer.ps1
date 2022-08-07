@@ -305,12 +305,12 @@ class Canvas {
     [Void] ToPPM(
         [String] $path
     ){
-        "P3`n{0} {1}`n255" -f $this.width, $this.height | Out-File $path -Encoding utf8
+        "P3`n{0} {1}`n255" -f $this.width, $this.height | Out-File $path -Encoding ascii
 
         for ($i = 0; $i -lt ($this.width*$this.height); $i++) {
             "{0} {1} {2}" -f (clamp($this.pixels[$i].red()*255)),
                              (clamp($this.pixels[$i].green()*255)), 
-                             (clamp($this.pixels[$i].blue()*255)) | Out-File $path -Append -Encoding utf8
+                             (clamp($this.pixels[$i].blue()*255)) | Out-File $path -Append -Encoding ascii
         }
 
     }
@@ -385,8 +385,8 @@ $c2 = [Color]::New(0.7,0.1,0.25)
 [Color]::ScalarMult([Color]::New(0.2,0.3,0.4),2)
 [Color]::Multiply([Color]::New(1,0.2,0.4),[Color]::New(0.9,1,0.1))
 
-$canvas = [Canvas]::New(10,20)
-$canvas.WritePixel(2,3,[Color]::New(1,0,0))
-$canvas.PixelAt(2,3)
+$canvas = [Canvas]::New(20,20)
+$canvas.WritePixel(10,10,[Color]::New(1,0,0))
+$canvas.PixelAt(10,10)
 $canvas.ToPPM("out.ppm")
 
