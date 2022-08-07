@@ -305,12 +305,12 @@ class Canvas {
     [Void] ToPPM(
         [String] $path
     ){
-        "P3`n{0} {1}`n255" -f $this.width, $this.height | Out-File $path
+        "P3`n{0} {1}`n255" -f $this.width, $this.height | Out-File $path -Encoding utf8
 
         for ($i = 0; $i -lt ($this.width*$this.height); $i++) {
             "{0} {1} {2}" -f (clamp($this.pixels[$i].red()*255)),
                              (clamp($this.pixels[$i].green()*255)), 
-                             (clamp($this.pixels[$i].blue()*255)) | Out-File $path -Append
+                             (clamp($this.pixels[$i].blue()*255)) | Out-File $path -Append -Encoding utf8
         }
 
     }
