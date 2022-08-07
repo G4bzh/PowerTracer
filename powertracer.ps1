@@ -13,6 +13,7 @@ Set-Variable EPSILON -option Constant -value 0.0001
 ###########
 
 function is_equal {
+    [OutputType([Bool])]
     param (
         [Parameter(Mandatory)]
         [Float] $a,
@@ -28,6 +29,22 @@ function is_equal {
     
 }
 
+function clamp {
+    [OutputType([Int])]
+    param (
+        [Parameter(Mandatory)]
+        [Float] $a
+    )
+        if ($a -lt 0) {
+            return 0
+        } 
+
+        if ($a -gt 255) {
+            return 255
+        }
+
+        return [int]$a
+} 
 
 #########
 # Tuple #
@@ -269,6 +286,7 @@ class Canvas {
     }
 
     # Methods
+
     [Void] WritePixel(
         [Int] $w,
         [Int] $h,
@@ -282,6 +300,19 @@ class Canvas {
         [Int] $h
     ){
         return $this.pixels[$this.width * $h + $w]
+    }
+
+    [Void] ToPPM(
+        [String] $path
+    ){
+        "P3`n{0} {1}`n255" -f $this.width, $this.height | Out-File $path
+
+        for ($i = 0; $i -lt ($this.width*$this.height); $i++) {
+            "{0} {1} {2}" -f (clamp($this.pixels[$i].red()*255)),
+                             (clamp($this.pixels[$i].green()*255)), 
+                             (clamp($this.pixels[$i].blue()*255)) | Out-File $path -Append
+        }
+
     }
 
 }
@@ -357,3 +388,5 @@ $c2 = [Color]::New(0.7,0.1,0.25)
 $canvas = [Canvas]::New(10,20)
 $canvas.WritePixel(2,3,[Color]::New(1,0,0))
 $canvas.PixelAt(2,3)
+$canvas.ToPPM("out.ppm")
+
