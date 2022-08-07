@@ -208,6 +208,88 @@ class Vector : Tuple {
 
 
 #########
+# Color #
+#########
+
+class Color : Tuple {
+    
+    # Constructors
+    Color(
+        [Float]$r,
+        [Float]$g,
+        [Float]$b
+    ) : base($r,$g,$b,0) {}
+
+
+    [Float] red(){
+        return $this.x()
+    }
+
+    [Float] green(){
+        return $this.y()
+    }
+
+    [Float] blue(){
+        return $this.z()
+    }
+
+    static [Color]Multiply(
+            [Color] $c1,
+            [Color] $c2
+        ){
+            return [Color]::New($c1.coord[0]*$c2.coord[0], 
+                                $c1.coord[1]*$c2.coord[1], 
+                                $c1.coord[2]*$c2.coord[2])
+        }
+}
+
+##########
+# Canvas #
+##########
+
+
+class Canvas {
+    # Properties
+    hidden [Int] $width
+    hidden [Int] $height
+    hidden [Color[]] $pixels
+
+    # Constructors
+    Canvas(
+        [Float]$width,
+        [Float]$height
+    ){
+        $this.pixels = new-object Color[] ($width*$height)
+        $this.width=$width
+        $this.height=$height
+
+        for ($i = 0; $i -lt ($width*$height); $i++) {
+            $this.pixels[$i] = [Color]::New(0,0,0)
+        }
+    }
+
+    # Methods
+    [Void] WritePixel(
+        [Int] $w,
+        [Int] $h,
+        [Color] $c
+    ){
+        $this.pixels[$this.width * $h + $w] = $c
+    }
+
+    [Color] PixelAt(
+        [Int] $w,
+        [Int] $h
+    ){
+        return $this.pixels[$this.width * $h + $w]
+    }
+
+}
+
+
+
+
+#########
 # Tests #
 #########
 
@@ -258,3 +340,20 @@ $v2 = [Vector]::New(2,3,4)
 [Tuple]::Dot($v1,$v2)
 [Vector]::Cross($v1,$v2)
 [Vector]::Cross($v2,$v1)
+
+$c = [Color]::New(-0.5,0.4,1.7)
+$c
+$c.red()
+$c.green()
+$c.blue()
+
+$c1 = [Color]::New(0.9,0.6,0.75)
+$c2 = [Color]::New(0.7,0.1,0.25)
+[Color]::Add($c1,$c2)
+[Color]::Subtract($c1,$c2)
+[Color]::ScalarMult([Color]::New(0.2,0.3,0.4),2)
+[Color]::Multiply([Color]::New(1,0.2,0.4),[Color]::New(0.9,1,0.1))
+
+$canvas = [Canvas]::New(10,20)
+$canvas.WritePixel(2,3,[Color]::New(1,0,0))
+$canvas.PixelAt(2,3)
