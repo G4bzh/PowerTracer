@@ -322,7 +322,25 @@ class Canvas {
 # Matrices #
 ############
 
-https://jamesmccaffrey.wordpress.com/2014/12/29/matrices-in-powershell/
+# https://jamesmccaffrey.wordpress.com/2014/12/29/matrices-in-powershell/
+
+class Matrix {
+    # Properties
+    hidden [Int] $n
+    hidden [Float[]] $data
+
+    # Constructors
+    Matrix(
+        [Int]$n
+    ){
+        $this.data = new-object Float[] ($n*$n)
+        $this.n=$n
+
+        for ($i = 0; $i -lt ($n*$n); $i++) {
+            $this.data[$i] = 0
+        }
+    }
+}
 
 #########
 # Tests #
@@ -394,3 +412,5 @@ $canvas.WritePixel(10,10,[Color]::New(1,0,0))
 $canvas.PixelAt(10,10)
 $canvas.ToPPM("out.ppm")
 
+$m = [Matrix]::New(3)
+$m.data
