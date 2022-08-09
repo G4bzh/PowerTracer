@@ -340,6 +340,17 @@ class Matrix {
             $this.data[$i] = 0
         }
     }
+
+    # Methods
+    [String] ToString() {
+        [String] $ret = ""
+        for ($i = 0; $i -lt ($this.n*$this.n); $i++) {
+            
+            $ret = $ret + $this.data[$i].ToString()
+            if ((($i+1) % $this.n) -eq 0) {$ret = $ret + "`n"} else {$ret = $ret + " "}
+        }
+        return $ret
+    }
 }
 
 #########
@@ -412,5 +423,5 @@ $canvas.WritePixel(10,10,[Color]::New(1,0,0))
 $canvas.PixelAt(10,10)
 $canvas.ToPPM("out.ppm")
 
-$m = [Matrix]::New(3)
-$m.data
+$m = [Matrix]::New(4)
+$m.ToString()
